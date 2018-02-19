@@ -28,30 +28,90 @@ public class Computation {
 	 */
 
 	public String getNumberLiteral(int number) {
-		try {
-			return textValue.getOnes(number);
-		} catch (NumberNotFound e) {
-			System.out.println("Invalid number...");
-			e.printStackTrace();
+		if (computableNumber.getNumberOfElements() == 1) {
+			try {
+				sb.append(textValue.getTenth(number));
+			} catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
 		}
 
-		return null;
-}
+		else if (computableNumber.getNumberOfElements() == 2) {
+			try {
+				sb.append(textValue.getOnes(number));
+				sb.append(" ");
+				sb.append(textValue.getMils(number));
+			} catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
+		}
+
+		else if (computableNumber.getNumberOfElements() == 3) {
+			try {
+				sb.append(textValue.getOnes(number));
+				sb.append(" ");
+				sb.append(textValue.getMils(++number));
+			} catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
+		}
+
+		else if (computableNumber.getNumberOfElements() == 4) {
+			try {
+				if (computableNumber.getDigitsAt(number) == 1) {
+					sb.append(textValue.getTenth(number));
+					sb.append(" ");
+					sb.append(textValue.getMils(++number));
+				}else {
+					sb.append(textValue.getThous(number));
+					sb.append(" ");
+					sb.append(textValue.getMils(++number));
+				}
+
+			} catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
+		}
+
+		else if (computableNumber.getNumberOfElements() == 5) {
+			try {
+
+				sb.append(textValue.getMils(number));
+				sb.append(" ");
+				sb.append(textValue.getMils(++number));
+
+			} catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
+		}
+
+		else if (computableNumber.getNumberOfElements() == 6) {
+			try {
+				sb.append(textValue.getTenth(number));
+				sb.append(" ");
+				sb.append(textValue.getMils(++number));
+			}
+			catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
+	}
 
 
 	public boolean hasRemainingSignificantCoefficients(int index) {
-			for (int i = 1; i <= index; i++) {
-				if (computableNumber.getDigitsAt(index - i ) == 0) {
-					traversal = 1;
-				}
+		for (int i = 1; i <= index; i++) {
+			if (index > 0 && computableNumber.getDigitsAt(index - i ) == 0) {
+				traversal = 1;
 			}
-			return (traversal == 0)?true:false;
 		}
+		return (traversal == 0)?true:false;
+	}
 
 	public boolean hasPreceedingSignificantCoefficients(int index) {
 
-			if (computableNumber.getDigitsAt(--index ) == 0) {
-				traversal = 1;
+		if (index > 0 && computableNumber.getDigitsAt(--index ) == 0) {
+			traversal = 1; 
 		}
 		return (traversal == 0)?true:false;
 	}
@@ -60,103 +120,135 @@ public class Computation {
 		switch (num) {
 		case 12:
 			try {
-				return textValue.getMils((6));
+				if (num > 1 && hasPreceedingSignificantCoefficients(num)) {
+					if (hasRemainingSignificantCoefficients(num)) {
+						sb.append(textValue.getMils((6)));
+						sb.append(" ");
+						return sb.toString() + " " + getPowersOfNumbers(--num);
+					}else {
+						sb.append(textValue.getMils((6)));
+						sb.append(" ");
+						return sb.toString() + " " + getPowersOfNumbers(num-=2);
+					}
+				}else {
+					sb.append(textValue.getMils((6)));
+					sb.append(" ");
+					sb.append(textValue.getMils(2));
+					return sb.toString();
+				}
+
+
 			} catch (NumberNotFound e) {
 				e.printStackTrace();
 				break;
 			}
 		case 9:
 			try {
-				return textValue.getMils((5));
+				if (hasPreceedingSignificantCoefficients(num)) {
+					if (hasRemainingSignificantCoefficients(num)) {
+						sb.append(textValue.getMils((5)));
+						sb.append(" ");
+						return sb.toString() + " " + getPowersOfNumbers(--num);
+					}else {
+						sb.append(textValue.getMils((5)));
+						sb.append(" ");
+						return sb.toString() + " " + getPowersOfNumbers(num-=2);
+					}
+				}else {
+					sb.append(textValue.getMils((5)));
+					sb.append(" ");
+					sb.append(textValue.getMils(2));
+					return sb.toString();
+				}
 			} catch (NumberNotFound e) {
 				e.printStackTrace();
 				break;
 			}
 		case 6:
 			try {
-				return textValue.getMils((4));
-			} catch (NumberNotFound e) {
+				if (hasPreceedingSignificantCoefficients(num)) {
+					if (hasRemainingSignificantCoefficients(num)) {
+						sb.append(textValue.getMils((4)));
+						sb.append(" ");
+						return sb.toString() + " " + getPowersOfNumbers(--num);
+					}else {
+						sb.append(textValue.getMils((4)));
+						sb.append(" ");
+						return sb.toString() + " " + getPowersOfNumbers(num-=2);
+					}
+				}else {
+					sb.append(textValue.getMils((4)));
+					sb.append(" ");
+					sb.append(textValue.getMils(2));
+					return sb.toString();
+				}
+			}catch (NumberNotFound e) {
 				e.printStackTrace();
 				break;
 			}
 		case 3:
 			try {
-				return textValue.getMils((3));
+				if (hasPreceedingSignificantCoefficients(num)) {
+					if (hasRemainingSignificantCoefficients(num)) {
+						sb.append(textValue.getMils((3)));
+						sb.append(" ");
+						return sb.toString() ;
+					}else {
+						sb.append(textValue.getMils((3)));
+						sb.append(" ");
+						return sb.toString();
+					}
+				}else {
+					sb.append(textValue.getMils((3)));
+					sb.append(" ");
+					sb.append(textValue.getMils(2));
+					return sb.toString();
+				}
 			} catch (NumberNotFound e) {
 				e.printStackTrace();
 				break;
 			}
 		case 2:
 			try {
-				return textValue.getMils((2));
-			} catch (NumberNotFound e) {
+				if (hasPreceedingSignificantCoefficients(num)) {
+					if (hasRemainingSignificantCoefficients(num)) {
+						sb.append(textValue.getMils((2)));
+						sb.append(" ");
+						return sb.toString();
+					}else {
+						sb.append(textValue.getMils((2)));
+						sb.append(" ");
+						return sb.toString();
+					}
+				}else {
+					sb.append(textValue.getMils((2)));
+					sb.append(" ");
+					sb.append(textValue.getMils(2));
+					return sb.toString();
+				}
+			}catch (NumberNotFound e) {
 				e.printStackTrace();
 				break;
 			}
 		default:
+			try {
+				if (hasPreceedingSignificantCoefficients(num)) {
+					if (hasRemainingSignificantCoefficients(num)) {
+						sb.append(textValue.getThous(num));
+						sb.append(" ");
+						return sb.toString();
+					}
+
+				}
+
+			} catch (NumberNotFound e) {
+				e.printStackTrace();
+			}
 			break;
 		}
-		return null;
-
-
-//			if (num == 3 ){
-//			if (!hasRemainingSignificantCoefficients(num)) {
-//
-//				try {
-//					sb.append(textValue.getOnes(computableNumber.getDigitsAt(num)));
-//				} catch (NumberNotFound e) {
-//					System.out.println("The input nnumber is invalid");
-//					System.exit(1);
-//				}
-//
-//				sb.append(" ");
-//				try {
-//					sb.append(textValue.getMils(num));
-//				} catch (NumberNotFound e) {
-//					System.out.println("The input nnumber is invalid");
-//					System.exit(1);
-//				}
-//				return sb.toString();
-//			}
-//
-//			else if (hasRemainingSignificantCoefficients(num)) {
-//				try {
-//					sb.append(textValue.getOnes(computableNumber.getDigitsAt(num)));
-//				} catch (NumberNotFound e) {
-//					e.printStackTrace();
-//					System.out.println("The input nnumber is invalid");
-//					System.exit(1);
-//
-//				}
-//				sb.append(" ");
-//				try {
-//					sb.append(textValue.getMils(num));
-//				} catch (NumberNotFound e) {
-//					e.printStackTrace();
-//					System.out.println("The input nnumber is invalid");
-//					System.exit(1);
-//				}
-//				sb.append(" ");
-//				try {
-//					if(computableNumber.getDigitsAt(num - 1) > 1){
-//						sb.append(textValue.getThous(num - 1));
-//						sb.append(textValue.getOnes(computableNumber.getDigitsAt(num - 2)));
-//					}
-//					else
-//						sb.append(textValue.getTenth(computableNumber.getDigitsAt(num - 2)));
-//				} catch (NumberNotFound e) {
-//					e.printStackTrace();
-//					System.out.println("The input nnumber is invalid");
-//					System.exit(1);
-//
-//				}
-//				return sb.toString();
-//			} else
-//				return null;
-//		}
-//		else
-//			return null;
-		}
-
+		return sb.toString();
 
 	}
+
+
+}

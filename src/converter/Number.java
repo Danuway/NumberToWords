@@ -48,14 +48,20 @@ public class Number {
 		collectDigitsOfNumbers();
 		StringBuilder coefficient = new StringBuilder();
 		for (int i = counter; i >= 0; i--) {
-
-			if (counter == i) {
+			
+			if (counter == 1) {
 				coefficient.append(coef(i));
+			}else if (counter == i) {
+				coefficient.append(coef(getDigitsAt(i)));
 				coefficient.append(" ");
+				coefficient.append(pow(i));
+				if (!expectedValue.hasRemainingSignificantCoefficients(i)) {
+					return coefficient.toString();
+				}
 			}else {
 				do{
 					if(this.digits[i] != 0){
-						coefficient.append(coef(i));
+						coefficient.append(coef(getDigitsAt(i)));
 						coefficient.append(" ");
 						if (expectedValue.hasPreceedingSignificantCoefficients(counter)) {
 							coefficient.append(pow(i));
@@ -83,6 +89,7 @@ public class Number {
 	}
 
 	private String coef(int num){
+		
 		return this.expectedValue.getNumberLiteral(num);
 	}
 
